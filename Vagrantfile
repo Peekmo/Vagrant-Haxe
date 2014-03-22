@@ -25,17 +25,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Default value: false
   config.ssh.forward_agent = true
 
-  # Share application folder to the guest VM. The first argument is
-  # an identifier, the second is the path on the guest to mount the
-  # folder, and the third is the path on the host to the actual folder.
-  config.vm.synced_folder "files/home", "/home/haxe"
+  config.vm.synced_folder "files/home", "/home/vagrant/haxe"
   config.vm.synced_folder "files/www", "/var/www"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -71,10 +62,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # # }
   #
   config.vm.provision "puppet" do |puppet|
-    puppet.manifests_path = "puppet/manifests"
     puppet.manifest_file  = "application.pp"
+    puppet.manifests_path = "puppet/manifests"
     puppet.module_path    = "puppet/modules"
-    puppet.options        = "--verbose --debug"
   end
 
 end
