@@ -4,16 +4,23 @@ class haxe::download (
 ) inherits haxe::params {
     exec { "download-haxe" :
         command => "wget ${link} -P /tmp/",
-        notify  => Class["haxe::install"],
     }
 }
 
 class haxe::install (
     $file = $haxe::params::file
 ) inherits haxe::params {
+    $libpath = "/usr/lib/haxe/lib"
+
     exec { "install-haxe" :
-        command => "tar -xvzf /tmp/${file} -C /tmp/ && sh /tmp/install-haxe.sh -y",
+        command => "tar -xvzf /tmp/${file} -C /tmp/; sh /tmp/install-haxe.sh -y",
         require => Class["haxe::download"],
+        returns => 1
+    }
+
+    exec { "haxelib-setup" :
+        command => "haxelib setup ${libpath}",
+        require => Exec["install-haxe"],
     }
 }
 
